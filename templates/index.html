@@ -1,15 +1,8 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<title>Blog</title>
-</head>
-<body>
-	<h1>Front Page</h1>
-	<a href="/newpost">New Post</a>
+{% extends "base.html" %}
 
-	<br>
+{% block title %} Blogiduz | Home {% endblock title %}
 
-	<div>
+{% block content %}
 	{% for post in posts %}
 		<div>
 			<h1>{{post.subject}}</h1>
@@ -19,6 +12,4 @@
 		</div>
 		<br><br>
 	{% endfor %}
-	</div>
-</body>
-</html>
+{% endblock content %}

@@ -1,25 +1,23 @@
-<!DOCTYPE html>
-<html>
-	<head>
-		<title>New Post</title>
-	</head>
-	<body>
-		<form method="post">
-			<label>
-				Subject
-				<input type="text" name="subject" value="{{subject}}">
-			</label>
-			
-			<br>
-			<label>
-				Content
-				<textarea name="content" rows="10" cols="50">{{content}}</textarea>
-			</label>
+{% extends "base.html" %}
 
-			<p style="color:red">{{error}}</p>
+{% block title %} Blogiduz | New Post {% endblock title %}
 
-			<br>
-			<input type="submit">
-		</form>
-	</body>
-</html>
+{% block content %}
+	<form method="post">
+		<label>
+			Subject
+			<input type="text" name="subject" value="{{subject}}">
+		</label>
+		
+		<br>
+		<label>
+			Content
+			<textarea name="content" rows="10" cols="50">{{content}}</textarea>
+		</label>
+
+		<p style="color:red;">{{error}}</p>
+
+		<br>
+		<input type="submit">
+	</form>
+{% endblock content %}

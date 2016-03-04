@@ -1,14 +1,12 @@
-<DOCTYPE html>
-<html>
-	<head>
-		<title>Blog - {{post.subject}}</title>
-	</head>
-	<body>
+{% extends "base.html" %}
+
+{% block title %} Blogiduz | {{post.subject}} {% endblock title %}
+
+{% block content %}
 		<div>
 			<h1>{{post.subject}}</h1>
 			<p>{{post.content}}</p>
 			<br><br>
 			<a href="/">Front Page</a>
 		</div>
-	</body>
-</html>
+{% endblock content %}
