@@ -3,7 +3,7 @@ import random
 import string
 import hmac
 import re
-secret = 'kbhfbehaffb frbfhrbhebvjhkhjgvgvgvgvghfvdfvhdfbvjhdfbv dfvvkhbfjhvbfd'
+from secret import secret
 
 #Signup stuff
 def valid_username(username):
