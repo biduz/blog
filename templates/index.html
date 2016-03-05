@@ -5,10 +5,11 @@
 {% block content %}
 	{% for post in posts %}
 		<div>
-			<h1>{{post.subject}}</h1>
+			<a href="/posts/{{post.key().id()}}" style="text-decoration: none; color: #333;">
+				<h1>{{post.subject}}</h1>
+			</a>
 			<hr>
 			<p>{{post.content}}</p>
-			<a href="/posts/{{post.key().id()}}">Permalink</a>
 		</div>
 		<br><br>
 	{% endfor %}

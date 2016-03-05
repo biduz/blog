@@ -9,17 +9,21 @@
 <body>
 	<div class="container">
 		<div class="text-right">
+			<a href="/">Home</a>
+			|
 			<a href="/newpost">New Post</a>
 			|
 			{% if user %}
-			{{user.username}}(<a href="/logout">logout</a>)
+				{{user.username}}(<a href="/logout">logout</a>)
 			{% else %}
 			<a href="/login">Login</a>
 			|
 			<a href="/signup">Signup</a>
 			{% endif %}
-		</div>	
-		<h1 class="text-center">Blogiduz</h1>
+		</div>
+		<a href="/" style="text-decoration: none; color: #333;">
+			<h1 class="text-center">Blogiduz</h1>
+		</a>	
 		<br>
 		{% block content %}
 		{% endblock content %}
