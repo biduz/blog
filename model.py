@@ -43,7 +43,8 @@ def user_by_name(username):
     return Users.all().filter('username =', username).get()
 
 def user_by_id(user_id):
-    return Users.get_by_id(int(user_id))
+    if user_id:
+        return Users.get_by_id(int(user_id))
 
 def new_user(username, password, email = None):
     password = user_stuff.make_pw_hash(username, password)

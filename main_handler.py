@@ -3,6 +3,7 @@ import jinja2
 import webapp2
 import json
 import user_stuff
+import model
 
 template_dir = os.path.join(os.path.dirname(__file__), 'templates')
 jinja_env = jinja2.Environment(loader = jinja2.FileSystemLoader(template_dir), 
@@ -11,6 +12,7 @@ jinja_env = jinja2.Environment(loader = jinja2.FileSystemLoader(template_dir),
 class Handler(webapp2.RequestHandler):
     def render(self, template, **params):
         t = jinja_env.get_template(template)
+        params['user'] = self.user 
         self.response.write(t.render(params))
 
     def get_from_request(self, var):
@@ -35,5 +37,12 @@ class Handler(webapp2.RequestHandler):
 
     def is_logged(self):
         user = self.get_cookie('user')
-        if user:
-            return user_stuff.check_secure_val(user)
+        user_id = user and user_stuff.check_secure_val(user)
+        return user_id and model.user_by_id(user_id) 
+
+    # this method will always run in the beginning
+    # looks at https://webapp-improved.appspot.com/_modules/webapp2.html#RequestHandler.initialize
+    # see both __init__ and initialize methods
+    def initialize(self, request, response):
+        webapp2.RequestHandler.initialize(self, request, response)
+        self.user = self.is_logged()

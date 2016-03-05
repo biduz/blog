@@ -18,15 +18,15 @@ class PermaLink(main_handler.Handler):
 
 class NewPost(main_handler.Handler):
     def get(self):
-        if self.is_logged():
+        if self.user:
             self.render('newpost.html')
         else:
             self.redirect('/login')
 
     def post(self):
-        if not self.is_logged():
+        if not self.user:
             self.redirect('/login')
-
+        #TBD: be sure that the code below will not run after redirect
         subject = self.get_from_request('subject')
         content = self.get_from_request('content')
 
@@ -61,11 +61,9 @@ class SignUpHandler(main_handler.Handler):
 
 class WelcomeHandler(main_handler.Handler):
     def get(self):
-        # The function is_logged() will return the user's id if the user 
-        # is logged and None otherwise.
-        user = self.is_logged()
-        if user:
-            username = model.user_by_id(user).username
+        if self.user:
+            user_id = self.user.user_id()
+            username = model.user_by_id(user_id).username
             self.render('welcome.html', username = username)
         else:
             self.redirect('/login')
