@@ -3,6 +3,12 @@
 {% block title %} Blogiduz | Login {% endblock title %}
 
 {% block content %}
+	{% if from_newpost %}
+		<div class="alert alert-warning">
+			<b>Warning! </b>You must be logged in to post. If you don't have a account
+			come on <a href="/signup" class="alert-link">Sign Up</a>!
+		</div>
+	{% endif %}
 	<h1>Login</h1>
 	<form method="post">
 		<table>

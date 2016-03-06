@@ -21,11 +21,11 @@ class NewPost(main_handler.Handler):
         if self.user:
             self.render('newpost.html')
         else:
-            self.redirect('/login')
+            self.redirect('/login?from_path=/newpost')
 
     def post(self):
         if not self.user:
-            self.redirect('/login')
+            self.redirect('/login?from_path=/newpost')
         #TBD: be sure that the code below will not run after redirect
         subject = self.get_from_request('subject')
         content = self.get_from_request('content')
@@ -70,16 +70,21 @@ class WelcomeHandler(main_handler.Handler):
 
 class LoginHandler(main_handler.Handler):
     def get(self):
-        self.render('login.html')
+        # when a not logged user goes to /newpost he 
+        # is redirect to /login?from_path=/newpost
+        from_newpost = self.get_from_request('from_path')
+        self.render('login.html', from_newpost = from_newpost)
 
     def post(self):
         username = self.get_from_request('username')
         password = self.get_from_request('password')
+        from_path = self.get_from_request('from_path')
         user = model.user_by_name(username)
         if user:
             if user_stuff.valid_pw(username, password, user.password):
                 self.set_user_cookie(user.user_id())
-                self.redirect('/welcome')
+                path = str(from_path) or '/welcome'
+                self.redirect(path)
             else:
                 login_error = "Username and Password didn't match"
                 self.render('login.html', username = username, 
@@ -90,7 +95,7 @@ class LoginHandler(main_handler.Handler):
 class LogoutHandler(main_handler.Handler):
     def get(self):
         self.set_cookie('user=; Path=/')
-        self.redirect('/signup')
+        self.redirect('/')
 
 class IndexJson(main_handler.Handler):
     def get(self):
