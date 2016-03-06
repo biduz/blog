@@ -5,8 +5,9 @@ import user_stuff
 
 class Index(main_handler.Handler):
     def get(self):
+        logged = self.get_from_request('logged')
         posts = model.list_posts()
-        self.render('index.html', posts = posts)
+        self.render('index.html', posts = posts, logged = logged)
 
 class PermaLink(main_handler.Handler):
     def get(self, post_id):
@@ -41,9 +42,15 @@ class NewPost(main_handler.Handler):
 
 class SignUpHandler(main_handler.Handler):
     def get(self):
-        self.render('signup.html')
+        if not self.user:
+            self.render('signup.html')
+        else:
+            self.redirect('/?logged=true')
 
     def post(self):
+        if self.user:
+            self.redirect('/?logged=true')
+        #TBD: be sure that the code below will not run after redirect
         username = self.get_from_request('username')
         password = self.get_from_request('password')
         verify = self.get_from_request('verify')
@@ -70,12 +77,18 @@ class WelcomeHandler(main_handler.Handler):
 
 class LoginHandler(main_handler.Handler):
     def get(self):
-        # when a not logged user goes to /newpost he 
-        # is redirect to /login?from_path=/newpost
-        from_newpost = self.get_from_request('from_path')
-        self.render('login.html', from_newpost = from_newpost)
+        if not self.user:
+            # when a not logged user goes to /newpost he 
+            # is redirect to /login?from_path=/newpost
+            from_newpost = self.get_from_request('from_path')
+            self.render('login.html', from_newpost = from_newpost)
+        else:
+            self.redirect('/?logged=true')
 
     def post(self):
+        if self.user:
+            self.redirect('/?logged=true')
+        #TBD: be sure that the code below will not run after redirect
         username = self.get_from_request('username')
         password = self.get_from_request('password')
         from_path = self.get_from_request('from_path')

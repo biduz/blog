@@ -3,6 +3,11 @@
 {% block title %} Blogiduz | Home {% endblock title %}
 
 {% block content %}
+	{% if logged %}
+		<div class="alert alert-success">
+			You're already logged in!
+		</div>
+	{% endif %}
 	{% for post in posts %}
 		<div>
 			<a href="/posts/{{post.key().id()}}" style="text-decoration: none; color: #333;">
