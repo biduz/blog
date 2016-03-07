@@ -1,5 +1,6 @@
 from google.appengine.ext import db
 import user_stuff
+import bleach
 
 class Post(db.Model):
     subject = db.StringProperty(required = True)
@@ -15,6 +16,11 @@ class Post(db.Model):
 
     def post_id(self):
         return self.key().id()
+
+    def escape_content(self):
+        self.content = bleach.clean(self.content)
+        self.content = self.content.replace('\n', '<br>')
+        return bleach.clean(self.content, tags=['br'])
 
 class Users(db.Model):
     username = db.StringProperty(required=True)

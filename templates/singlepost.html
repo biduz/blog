@@ -5,7 +5,7 @@
 {% block content %}
 		<div>
 			<h1>{{post.subject}}</h1>
-			<p>{{post.content}}</p>
+			<p>{{post.escape_content() | safe}}</p>
 			<br><br>
 			<a href="/">Front Page</a>
 		</div>
