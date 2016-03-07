@@ -3,9 +3,13 @@
 {% block title %} Blogiduz | Home {% endblock title %}
 
 {% block content %}
-	{% if logged %}
+	{% if logged == 'true' %}
 		<div class="alert alert-success">
 			You're already logged in!
+		</div>
+	{% elif logged == 'out' %}
+		<div class="alert alert-success">
+			You have successfully logged out. Waiting for you here back!
 		</div>
 	{% endif %}
 	{% for post in posts %}

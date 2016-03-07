@@ -108,7 +108,7 @@ class LoginHandler(main_handler.Handler):
 class LogoutHandler(main_handler.Handler):
     def get(self):
         self.set_cookie('user=; Path=/')
-        self.redirect('/')
+        self.redirect('/?logged=out')
 
 class IndexJson(main_handler.Handler):
     def get(self):
