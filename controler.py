@@ -32,7 +32,8 @@ class NewPost(main_handler.Handler):
         content = self.get_from_request('content')
 
         if subject and content:
-            post = model.new_post(subject = subject, content = content)
+            post = model.new_post(subject = subject, content = content,
+                                  author = self.user.username)
             self.redirect('posts/%s' % post)
         else:
             error = 'We need both the content and title of the post'

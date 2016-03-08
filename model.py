@@ -6,12 +6,14 @@ class Post(db.Model):
     subject = db.StringProperty(required = True)
     content = db.TextProperty(required = True)
     created = db.DateTimeProperty(auto_now_add = True)
+    author = db.StringProperty(required = True)
 
     def as_dict(self):
         time_fmt = '%c'
         d = {'subject': self.subject,
              'content': self.content,
-             'created': self.created.strftime(time_fmt)}
+             'created': self.created.strftime(time_fmt),
+             'author': self.author}
         return d
 
     def post_id(self):
@@ -39,8 +41,8 @@ def list_posts():
 def post_by_id(post_id):
     return Post.get_by_id(int(post_id))
 
-def new_post(subject, content):
-    new = Post(subject = subject, content = content)
+def new_post(subject, content, author):
+    new = Post(subject = subject, content = content, author = author)
     new.put()
     return new.post_id()
 
