@@ -4,6 +4,7 @@ import string
 import hmac
 import re
 from secret import secret
+import model
 
 #Signup stuff
 def valid_username(username):
@@ -47,6 +48,9 @@ def valid_signup_form(username, password, verify, email):
     params = {'username_value': username,
               'email_value': email}
 
+    if model.user_by_name(username):
+        have_error = True
+        params['username_error'] = "That username is not available."
     if not valid_username(username):
         have_error = True
         params['username_error'] = "That's not a valid username."
