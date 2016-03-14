@@ -64,7 +64,7 @@ class SignUpHandler(main_handler.Handler):
             self.render('signup.html', **params)       
         else:
             user_id = model.new_user(username, password, email)
-            self.set_user_cookie(user_id)
+            self.login(user_id)
             self.redirect('/welcome')
 
 class WelcomeHandler(main_handler.Handler):
@@ -96,7 +96,7 @@ class LoginHandler(main_handler.Handler):
         user = model.user_by_name(username)
         if user:
             if user_stuff.valid_pw(username, password, user.password):
-                self.set_user_cookie(user.user_id())
+                self.login(user.user_id())
                 path = str(from_path) or '/welcome'
                 self.redirect(path)
             else:
@@ -108,8 +108,7 @@ class LoginHandler(main_handler.Handler):
 
 class LogoutHandler(main_handler.Handler):
     def get(self):
-        self.set_cookie('user=; Path=/')
-        self.redirect('/?logged=out')
+        self.logout()
 
 class IndexJson(main_handler.Handler):
     def get(self):

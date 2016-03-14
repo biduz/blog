@@ -40,9 +40,13 @@ class Handler(webapp2.RequestHandler):
         user_id = user and user_stuff.check_secure_val(user)
         return user_id and model.user_by_id(user_id) 
 
-    # this method will always run in the beginning
-    # looks at https://webapp-improved.appspot.com/_modules/webapp2.html#RequestHandler.initialize
-    # see both __init__ and initialize methods
+    def login(self, user):
+        return self.set_user_cookie(user)
+
+    def logout(self):
+        self.set_cookie('user=; Path=/')
+        self.redirect('/?logged=out')
+
     def initialize(self, request, response):
         webapp2.RequestHandler.initialize(self, request, response)
         self.user = self.is_logged()
