@@ -1,3 +1,3 @@
 from google.appengine.ext import vendor
 
-vendor.add('bleach')
+vendor.add('libs/bleach')
