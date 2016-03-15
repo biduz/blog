@@ -41,7 +41,6 @@ class Handler(webapp2.RequestHandler):
         return user_id and model.user_by_id(user_id) 
 
     def login(self, user):
-        user_stuff.set_token(user)
         self.set_user_cookie(user)
 
     def logout(self,user):

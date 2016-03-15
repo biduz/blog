@@ -3,7 +3,6 @@ import random
 import string
 import hmac
 import re
-from secret import secret
 import model
 
 #Signup stuff
@@ -33,13 +32,14 @@ def valid_pw(name, pw, h):
 #Very simple cache to avoid login just copying the cookies
 session_cache = {}
 def set_token(user):
-    session_cache[str(user)] = 'logged'
+    token = session_cache[str(user)] = make_salt()
+    return token
 
-def check_token(user):
+def get_token(user):
     try:
-        return session_cache[str(user)] == 'logged'
+        return session_cache[str(user)]
     except:
-        return None
+        return ' ' # Must not return None or hmac will not work properly
 
 def delete_token(user):
     try:
@@ -48,17 +48,20 @@ def delete_token(user):
     except:
         return False
 
-
 #Cookies stuff
-def hash_str(s):
-    return hmac.new(secret, s, hashlib.sha256).hexdigest()
+def hash_str(s, token = None):
+    if not token:
+        token = set_token(s)
+        return hmac.new(token, s, hashlib.sha256).hexdigest()
+    return hmac.new(token, s, hashlib.sha256).hexdigest()
 
-def make_secure_val(s):
-    return '%s|%s' % (s, hash_str(s))
+def make_secure_val(s, token = None):
+    return '%s|%s' % (s, hash_str(s, token))
 
 def check_secure_val(h):
     val = h.split('|')[0]
-    if h == make_secure_val(val) and check_token(val):
+    token = get_token(val)
+    if h == make_secure_val(val, token):
         return val
 
 #Form stuff
