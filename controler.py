@@ -109,7 +109,10 @@ class LoginHandler(main_handler.Handler):
 class LogoutHandler(main_handler.Handler):
     def get(self):
         user = self.user
-        self.logout(user.user_id())
+        if user:
+            self.logout(user.user_id())
+        else:
+            self.redirect('/')
 
 class IndexJson(main_handler.Handler):
     def get(self):
