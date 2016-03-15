@@ -48,15 +48,15 @@ def delete_token(user):
     except:
         return False
 
-#Cookies stuff
-def hash_str(s, token = None):
+# Secure cookie stuff
+def hash_secure_val(s, token = None):
     if not token:
         token = set_token(s)
         return hmac.new(token, s, hashlib.sha256).hexdigest()
     return hmac.new(token, s, hashlib.sha256).hexdigest()
 
 def make_secure_val(s, token = None):
-    return '%s|%s' % (s, hash_str(s, token))
+    return '%s|%s' % (s, hash_secure_val(s, token))
 
 def check_secure_val(h):
     val = h.split('|')[0]
