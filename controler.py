@@ -108,7 +108,8 @@ class LoginHandler(main_handler.Handler):
 
 class LogoutHandler(main_handler.Handler):
     def get(self):
-        self.logout()
+        user = self.user
+        self.logout(user.user_id())
 
 class IndexJson(main_handler.Handler):
     def get(self):

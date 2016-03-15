@@ -30,6 +30,25 @@ def valid_pw(name, pw, h):
     salt = h.split(',')[1]
     return h == make_pw_hash(name, pw, salt)
 
+#Very simple cache to avoid login just copying the cookies
+session_cache = {}
+def set_token(user):
+    session_cache[str(user)] = 'logged'
+
+def check_token(user):
+    try:
+        return session_cache[str(user)] == 'logged'
+    except:
+        return None
+
+def delete_token(user):
+    try:
+        del session_cache[str(user)]
+        return True
+    except:
+        return False
+
+
 #Cookies stuff
 def hash_str(s):
     return hmac.new(secret, s, hashlib.sha256).hexdigest()
@@ -39,7 +58,7 @@ def make_secure_val(s):
 
 def check_secure_val(h):
     val = h.split('|')[0]
-    if h == make_secure_val(val):
+    if h == make_secure_val(val) and check_token(val):
         return val
 
 #Form stuff
