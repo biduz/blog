@@ -95,7 +95,7 @@ class LoginHandler(main_handler.Handler):
         from_path = self.get_from_request('from_path')
         user = model.user_by_name(username)
         if user:
-            if user_stuff.valid_pw(username, password, user.password):
+            if user_stuff.valid_pw(password, user.password):
                 self.login(user.user_id())
                 path = str(from_path) or '/welcome'
                 self.redirect(path)

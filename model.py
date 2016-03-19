@@ -55,7 +55,7 @@ def user_by_id(user_id):
         return Users.get_by_id(int(user_id))
 
 def new_user(username, password, email = None):
-    password = user_stuff.make_pw_hash(username, password)
+    password = user_stuff.make_pw_hash(password)
     new = Users(username = username,
                 password = password,
                 email = email)

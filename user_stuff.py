@@ -4,6 +4,7 @@ import string
 import hmac
 import re
 import model
+from passlib.hash import sha512_crypt
 
 #Signup stuff
 def valid_username(username):
@@ -16,21 +17,18 @@ def valid_email(email):
     return not email or re.match('^[\S]+@[\S]+\.[\S]+$', email)
 
 #Password stuff
-def make_salt():
-    return ''.join(random.choice(string.letters) for x in xrange(5))
+def make_pw_hash(pw):
+    return sha512_crypt.encrypt(pw)
 
-def make_pw_hash(name, pw, salt = None):
-    if not salt:
-        salt = make_salt() 
-    h = hashlib.sha256(name + pw + salt).hexdigest()
-    return '%s,%s' % (h, salt)
-
-def valid_pw(name, pw, h):
-    salt = h.split(',')[1]
-    return h == make_pw_hash(name, pw, salt)
+def valid_pw(pw, h):
+    return sha512_crypt.verify(pw, h)
 
 #Very simple cache to avoid login just copying the cookies
 session_cache = {}
+
+def make_salt():
+    return ''.join(random.choice(string.letters) for x in xrange(5))
+
 def set_token(user):
     token = session_cache[str(user)] = make_salt()
     return token
