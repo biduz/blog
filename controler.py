@@ -27,19 +27,19 @@ class NewPost(main_handler.Handler):
     def post(self):
         if not self.user:
             self.redirect('/login?from_path=/newpost')
-        #TBD: be sure that the code below will not run after redirect
-        subject = self.get_from_request('subject')
-        content = self.get_from_request('content')
-
-        if subject and content:
-            post = model.new_post(subject = subject, content = content,
-                                  author = self.user.username)
-            self.redirect('posts/%s' % post)
         else:
-            error = 'We need both the content and title of the post'
-            self.render('newpost.html', error = error, 
-                                        subject = subject, 
-                                        content = content)
+            subject = self.get_from_request('subject')
+            content = self.get_from_request('content')
+
+            if subject and content:
+                post = model.new_post(subject = subject, content = content,
+                                      author = self.user.username)
+                self.redirect('posts/%s' % post)
+            else:
+                error = 'We need both the content and title of the post'
+                self.render('newpost.html', error = error, 
+                                            subject = subject, 
+                                            content = content)
 
 class SignUpHandler(main_handler.Handler):
     def get(self):
@@ -51,21 +51,21 @@ class SignUpHandler(main_handler.Handler):
     def post(self):
         if self.user:
             self.redirect('/?logged=true')
-        #TBD: be sure that the code below will not run after redirect
-        username = self.get_from_request('username')
-        password = self.get_from_request('password')
-        verify = self.get_from_request('verify')
-        email = self.get_from_request('email')
-
-        params, error = user_stuff.valid_signup_form(username,password, 
-                                                     verify,email)
-        
-        if error:
-            self.render('signup.html', **params)       
         else:
-            user_id = model.new_user(username, password, email)
-            self.login(user_id)
-            self.redirect('/welcome')
+            username = self.get_from_request('username')
+            password = self.get_from_request('password')
+            verify = self.get_from_request('verify')
+            email = self.get_from_request('email')
+
+            params, error = user_stuff.valid_signup_form(username,password, 
+                                                         verify,email)
+            
+            if error:
+                self.render('signup.html', **params)       
+            else:
+                user_id = model.new_user(username, password, email)
+                self.login(user_id)
+                self.redirect('/welcome')
 
 class WelcomeHandler(main_handler.Handler):
     def get(self):
@@ -89,28 +89,27 @@ class LoginHandler(main_handler.Handler):
     def post(self):
         if self.user:
             self.redirect('/?logged=true')
-        #TBD: be sure that the code below will not run after redirect
-        username = self.get_from_request('username')
-        password = self.get_from_request('password')
-        from_path = self.get_from_request('from_path')
-        user = model.user_by_name(username)
-        if user:
-            if user_stuff.valid_pw(password, user.password):
-                self.login(user.user_id())
-                path = str(from_path) or '/welcome'
-                self.redirect(path)
-            else:
-                login_error = "Username and Password didn't match"
-                self.render('login.html', username = username, 
-                                          login_error = login_error)
         else:
-            self.render('login.html', login_error = 'Invalid Login')
+            username = self.get_from_request('username')
+            password = self.get_from_request('password')
+            from_path = self.get_from_request('from_path')
+            user = model.user_by_name(username)
+            if user:
+                if user_stuff.valid_pw(password, user.password):
+                    self.login(user.user_id())
+                    path = str(from_path) or '/welcome'
+                    self.redirect(path)
+                else:
+                    login_error = "Username and Password didn't match"
+                    self.render('login.html', username = username, 
+                                              login_error = login_error)
+            else:
+                self.render('login.html', login_error = 'Invalid Login')
 
 class LogoutHandler(main_handler.Handler):
     def get(self):
-        user = self.user
-        if user:
-            self.logout(user.user_id())
+        if self.user:
+            self.logout(self.user.user_id())
         else:
             self.redirect('/')
 
